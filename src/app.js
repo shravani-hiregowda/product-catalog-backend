@@ -17,7 +17,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://startling-daffodil-3e1225.netlify.app"
+      "https://vigneshwara-hardware-crafts.netlify.app"
     ],
     credentials: true
   })
