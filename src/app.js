@@ -9,10 +9,12 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://YOUR-NETLIFY-SITE.netlify.app"
+    "https://startling-daffodil-3e1225.netlify.app"
   ],
   credentials: true
 }));
+
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
