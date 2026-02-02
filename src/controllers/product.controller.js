@@ -16,9 +16,7 @@ export const createProduct = async (req, res) => {
       category: req.body.category,
       description: req.body.description,
       inStock: req.body.inStock === "true" || req.body.inStock === true,
-
-      // ✅ Cloudinary gives full URL here
-      image: req.file.path
+      image: req.file.path   // ✅ Cloudinary URL
     });
 
     res.status(201).json(product);
@@ -27,6 +25,7 @@ export const createProduct = async (req, res) => {
     res.status(400).json({ message: "Product creation failed" });
   }
 };
+
 
 /**
  * GET /api/products
@@ -67,17 +66,21 @@ export const getProductById = async (req, res) => {
  */
 export const updateProduct = async (req, res) => {
   try {
-    const updateData = {
-      name: req.body.name,
-      price: req.body.price,
-      category: req.body.category,
-      description: req.body.description,
-      inStock: req.body.inStock === "true" || req.body.inStock === true
-    };
+    const updateData = {};
 
-    // ✅ Replace image only if new one uploaded
+    if (req.body.name !== undefined) updateData.name = req.body.name;
+    if (req.body.price !== undefined) updateData.price = req.body.price;
+    if (req.body.category !== undefined) updateData.category = req.body.category;
+    if (req.body.description !== undefined) updateData.description = req.body.description;
+
+    if (req.body.inStock !== undefined) {
+      updateData.inStock =
+        req.body.inStock === "true" || req.body.inStock === true;
+    }
+
+    // ✅ Cloudinary image (only if new file uploaded)
     if (req.file) {
-      updateData.image = req.file.path;
+      updateData.image = req.file.path; // Cloudinary secure URL
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -96,6 +99,7 @@ export const updateProduct = async (req, res) => {
     res.status(400).json({ message: "Update failed" });
   }
 };
+
 
 /**
  * DELETE /api/products/:id
