@@ -6,13 +6,19 @@ import Product from "../models/Product.js";
  */
 export const createProduct = async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ message: "Image is required" });
+    }
+
     const product = await Product.create({
       name: req.body.name,
       price: req.body.price,
       category: req.body.category,
       description: req.body.description,
       inStock: req.body.inStock === "true" || req.body.inStock === true,
-      image: `/uploads/${req.file.filename}`
+
+      // ✅ Cloudinary gives full URL here
+      image: req.file.path
     });
 
     res.status(201).json(product);
@@ -69,9 +75,9 @@ export const updateProduct = async (req, res) => {
       inStock: req.body.inStock === "true" || req.body.inStock === true
     };
 
-    // Update image only if new one uploaded
+    // ✅ Replace image only if new one uploaded
     if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
+      updateData.image = req.file.path;
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(
